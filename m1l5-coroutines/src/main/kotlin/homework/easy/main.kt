@@ -11,16 +11,15 @@ suspend fun main() {
 
     val time = measureTimeMillis {
 
-        coroutineScope {
-
         // val ctx = newSingleThreadContext("MyOwnThread")
         // val ctx = newFixedThreadPoolContext(2,"MyOwnThread")
 
-        val foundNumbers = listOf(
-                async { findNumberInList(toFind, numbers) },
-                async { findNumberInList(toFindOther, numbers) })
-//                async { println("Asysnc2      : I'm working in thread ${Thread.currentThread().name}")
-//                        findNumberInList(toFindOther, numbers) }
+        runBlocking {
+
+        val foundNumbers = listOf(findNumberInList(toFind, numbers),
+                                  findNumberInList(toFindOther, numbers))
+//        val foundNumbers = listOf(async{ findNumberInList(toFind, numbers)},
+//                                  async{ findNumberInList(toFindOther, numbers)})
             runCatching {
                 foundNumbers.forEach {
                     if (it.await() != -1) {
@@ -34,7 +33,6 @@ suspend fun main() {
                 //println("Deffered is canceled? ${it.isCancelled}")
                 println("I have a problem")
             }.getOrThrow()
-
         }
 
     }
