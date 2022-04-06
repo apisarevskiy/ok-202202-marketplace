@@ -13,15 +13,14 @@ suspend fun main() {
 
         coroutineScope {
 
-        //val ctx = newSingleThreadContext("MyOwnThread")
-         val ctx = newFixedThreadPoolContext(2,"MyOwnThread")
+        // val ctx = newSingleThreadContext("MyOwnThread")
+        // val ctx = newFixedThreadPoolContext(2,"MyOwnThread")
 
         val foundNumbers = listOf(
-                async(ctx) { println("Asysnc1      : I'm working in thread ${Thread.currentThread().name}")
-                        findNumberInList(toFind, numbers) },
-                async(ctx) { println("Asysnc2      : I'm working in thread ${Thread.currentThread().name}")
-                        findNumberInList(toFindOther, numbers) }
-            )
+                async { findNumberInList(toFind, numbers) },
+                async { findNumberInList(toFindOther, numbers) })
+//                async { println("Asysnc2      : I'm working in thread ${Thread.currentThread().name}")
+//                        findNumberInList(toFindOther, numbers) }
             runCatching {
                 foundNumbers.forEach {
                     if (it.await() != -1) {
@@ -32,7 +31,7 @@ suspend fun main() {
                 }
             }.onFailure {
                 //println("Deffered still running? ${it.isActive}")
-               // println("Deffered is canceled? ${it.isCancelled}")
+                //println("Deffered is canceled? ${it.isCancelled}")
                 println("I have a problem")
             }.getOrThrow()
 
