@@ -16,5 +16,7 @@ fun CoroutineScope.findNumberInList(toFind: Int, numbers: List<Int>): Deferred<I
 
     //Thread.sleep(2000L)
     delay(2000L)
+    println("async this: $this = ${this.hashCode()}")
+
     numbers.firstOrNull { it == toFind } ?: -1
 }

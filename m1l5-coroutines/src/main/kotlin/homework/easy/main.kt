@@ -16,10 +16,13 @@ suspend fun main() {
 
         runBlocking {
 
+        println("runBlockin this: $this = ${this.hashCode()}")
+
         val foundNumbers = listOf(findNumberInList(toFind, numbers),
                                   findNumberInList(toFindOther, numbers))
 //        val foundNumbers = listOf(async{ findNumberInList(toFind, numbers)},
 //                                  async{ findNumberInList(toFindOther, numbers)})
+
             runCatching {
                 foundNumbers.forEach {
                     if (it.await() != -1) {
@@ -29,8 +32,8 @@ suspend fun main() {
                     }
                 }
             }.onFailure {
-                //println("Deffered still running? ${it.isActive}")
-                //println("Deffered is canceled? ${it.isCancelled}")
+                println("Deffered still running? ${foundNumbers[0].isActive}")
+                println("Deffered is canceled? ${foundNumbers[1].isCancelled}")
                 println("I have a problem")
             }.getOrThrow()
         }
